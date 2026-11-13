@@ -4,7 +4,7 @@ import { DEMO, MARQUE } from './config.js'
 import { creerDemo } from './lib/demo.js'
 import { enrichir, soldes } from './lib/calc.js'
 import { isoDuJour } from './lib/format.js'
-import { Avatar, Bouton, EASE, Presence, RESSORT } from './loseless/ui.jsx'
+import { Avatar, Bouton, EASE, Icone, Presence, RESSORT } from './loseless/ui.jsx'
 import { Dock, NouvelInfopreneur } from './blocs.jsx'
 import Vue from './pages/Vue.jsx'
 import Infopreneurs from './pages/Infopreneurs.jsx'
@@ -92,6 +92,18 @@ export default function App() {
           <div className="absolute left-1/2 hidden -translate-x-1/2 md:block"><Dock modules={modules} courant={dockCourant} aller={aller} /></div>
           <div className="flex items-center gap-2">
             {!espace && <Bouton icone="plus" onClick={() => setNouveau(true)}><span className="hidden sm:inline">Nouvel infopreneur</span></Bouton>}
+            {/* Le sélecteur de vue : l'admin, ou ce que voit un infopreneur. */}
+            <label className="relative flex h-10 items-center rounded-full border border-craie bg-white pl-3.5 pr-8 text-sm font-semibold shadow-[0_1px_2px_rgba(18,18,18,0.04)] transition hover:border-encre/30">
+              <Icone nom="oeil" className="mr-2 h-4 w-4 text-pierre" />
+              <span className="max-w-[130px] truncate">{espace ? espace.nom : 'Vue admin'}</span>
+              <Icone nom="bas" className="pointer-events-none absolute right-3 h-3.5 w-3.5 text-pierre" />
+              <select aria-label="Choisir la vue" className="absolute inset-0 cursor-pointer opacity-0" value={espace ? espace.id : ''} onChange={(e) => aller(e.target.value ? 'espace/' + e.target.value : 'vue')}>
+                <option value="">Vue admin</option>
+                <optgroup label="Voir comme un infopreneur">
+                  {data.partenaires.map((p) => <option key={p.id} value={p.id}>{p.nom}</option>)}
+                </optgroup>
+              </select>
+            </label>
             <span className="flex items-center gap-2 rounded-full border border-craie bg-white py-1 pl-1 pr-3 shadow-[0_1px_2px_rgba(18,18,18,0.04)]">
               <Avatar nom={espace ? espace.nom : 'Anthony'} taille="md" sombre />
               <span className="hidden text-sm font-semibold lg:block">{espace ? espace.nom : 'Anthony'}</span>
